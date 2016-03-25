@@ -1,6 +1,6 @@
 IBM MobileFirst Platform Foundation
 ===
-## PinCodeAndroid
+## PinCodeWin10
 A sample application demonstrating use of the CredentialsValidation Security Check.
 
 ### Tutorials
