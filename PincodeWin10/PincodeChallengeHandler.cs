@@ -1,4 +1,4 @@
-﻿/**
+/**
 * Copyright 2016 IBM Corp.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,9 +27,15 @@ using Worklight;
 
 namespace PincodeWin10
 {
-    public class PinCodeChallengeHandler : Worklight.ChallengeHandler
+    public class PinCodeChallengeHandler : Worklight.SecurityCheckChallengeHandler
     {
         public JObject challengeAnswer { get; set; }
+
+        public override string SecurityCheck
+        {
+            get; set;
+        }
+
         private bool authSuccess = false;
         private bool shouldsubmitchallenge = false;
         private bool shouldsubmitfailure = false;
@@ -47,12 +53,7 @@ namespace PincodeWin10
             return this.challengeAnswer;
         }
 
-        public override string GetRealm()
-        {
-            return Realm;
-        }
-
-        public override void HandleChallenge(WorklightResponse challenge)
+        public override void HandleChallenge(Object challenge)
         {
 
             waitForPincode.Reset();
@@ -61,43 +62,9 @@ namespace PincodeWin10
             waitForPincode.WaitOne();
         }
 
-        public override bool ShouldSubmitFailure()
+        public override bool ShouldCancel()
         {
             return shouldsubmitfailure;
-        }
-
-        public override void OnFailure(WorklightResponse response)
-        {
-            Debug.WriteLine(response.ResponseJSON);
-        }
-
-        public override void OnSuccess(WorklightResponse challenge)
-        {
-            Debug.WriteLine(challenge.ResponseJSON);
-        }
-
-        public override bool ShouldSubmitSuccess()
-        {
-            return authSuccess;
-        }
-
-        public override WorklightResponse GetSubmitFailureResponse()
-        {
-            JObject respJSON = new JObject();
-            respJSON.Add("Respose", "Cancelled Request");
-
-            WorklightResponse response = new WorklightResponse(false, "User cancelled the request", respJSON, "User cancelled the request", (int)HttpStatusCode.InternalServerError);
-            return response;
-        }
-
-        public override bool IsCustomResponse(WorklightResponse response)
-        {
-            if (response == null || response.ResponseJSON == null || response.ResponseJSON["PinCodeAttempts"] == null)
-            {
-                return false;
-            }
-
-            return true;
         }
 
         public override bool ShouldSubmitChallengeAnswer()
@@ -114,6 +81,21 @@ namespace PincodeWin10
         public void SetSubmitFailure(bool shouldsubmitfailure)
         {
             this.shouldsubmitfailure = shouldsubmitfailure;
+        }
+
+        public override void HandleFailure(JObject error)
+        {
+            Debug.WriteLine("Error");
+        }
+
+        public override void HandleSuccess(JObject identity)
+        {
+            Debug.WriteLine("Success");
+        }
+
+        public override void SubmitChallengeAnswer(object answer)
+        {
+            challengeAnswer = (JObject)answer;
         }
 
     }
