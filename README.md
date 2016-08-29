@@ -16,6 +16,8 @@ https://mobilefirstplatform.ibmcloud.com/tutorials/en/foundation/8.0/authenticat
  - `mfpdev app register` - to register the application.
  - `mfpdev app push` - to map the `accessRestricted` scope to the `PinCodeAttempts` security check.
 
+3. Run the application in the Android Emulator or physical device. Press the **Get Balance** button and enter "1234" to display the balance.
+
 ### Supported Levels
 IBM MobileFirst Platform Foundation 8.0
 
